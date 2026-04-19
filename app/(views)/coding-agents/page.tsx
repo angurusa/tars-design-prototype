@@ -173,7 +173,7 @@ export default function CodingAgentsPage() {
   // populated / streaming
 
   const agentRow = (agent: CodingAgentTask, icon: React.ReactNode, badge: React.ReactNode) => (
-    <Card key={agent.id} variant="interactive" className="px-4 py-2.5">
+    <Card key={agent.id} variant="interactive" className="px-4 py-2.5 cursor-pointer" onClick={() => window.location.href = `/task/${agent.id}`}>
       <div className="flex items-center gap-3">
         {icon}
         <span className="font-mono text-xs text-muted-foreground">#{agent.adoTaskId}</span>

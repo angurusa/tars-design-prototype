@@ -94,7 +94,7 @@ export function AgentCard({ agent }: AgentCardProps) {
       <CardFooter className="gap-2">
         {/* Running state buttons */}
         {isActive && (
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => window.location.href = `/task/${agent.id}`}>
             View Workspace
           </Button>
         )}

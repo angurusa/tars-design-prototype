@@ -271,6 +271,7 @@ export default function DashboardPage() {
                   <div
                     key={task.id}
                     className="flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] hover:bg-muted/50 transition-colors cursor-pointer"
+                    onClick={() => window.location.href = `/task/${task.id}`}
                   >
                     <CircleDot className="h-3.5 w-3.5 text-primary shrink-0" />
                     <span className="flex-1 truncate">
@@ -289,6 +290,7 @@ export default function DashboardPage() {
                   <div
                     key={task.id}
                     className="flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] text-muted-foreground hover:bg-muted/50 transition-colors cursor-pointer"
+                    onClick={() => window.location.href = `/task/${task.id}`}
                   >
                     <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500/50 shrink-0" />
                     <span className="flex-1 truncate">
