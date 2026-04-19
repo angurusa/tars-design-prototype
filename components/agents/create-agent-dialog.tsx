@@ -49,29 +49,27 @@ export function CreateAgentDialog({
   const [config, setConfig] = useState<CustomAgentGenerateResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // When editing, fetch full config on open
+  // When editing, load mock config
   useEffect(() => {
     if (open && editAgentId && !config) {
       setLoadingEdit(true);
-      fetch(`/api/custom-agents/${editAgentId}`)
-        .then((r) => r.json())
-        .then((data) => {
-          setConfig({
-            name: data.name,
-            description: data.description ?? "",
-            tags: data.tags ?? [],
-            triggerType: data.triggerType as "scheduled" | "on-demand",
-            schedule: data.schedule,
-            dataSources: data.dataSources ?? [],
-            systemPrompt: data.systemPrompt,
-            maxTokens: data.maxTokens,
-            outputFormat: data.outputFormat as "markdown" | "json",
-            recordType: data.recordType,
-          });
-          setStep("review");
-        })
-        .catch(() => setError("Failed to load agent config"))
-        .finally(() => setLoadingEdit(false));
+      // Simulate fetch with mock data
+      setTimeout(() => {
+        setConfig({
+          name: "PR Staleness Monitor",
+          description: "Check open PRs and flag stale ones",
+          tags: ["code-health"],
+          triggerType: "scheduled" as "scheduled" | "on-demand",
+          schedule: "0 9 * * 1-5",
+          dataSources: ["ado-prs"],
+          systemPrompt: "You are a PR health monitor. Check all open PRs and flag any that have been open more than 5 days without a review.",
+          maxTokens: 4096,
+          outputFormat: "markdown" as "markdown" | "json",
+          recordType: "custom-agent-output",
+        });
+        setStep("review");
+        setLoadingEdit(false);
+      }, 800);
     }
   }, [open, editAgentId, config]);
 
@@ -87,51 +85,43 @@ export function CreateAgentDialog({
     if (!description.trim()) return;
     setGenerating(true);
     setError(null);
-    try {
-      const res = await fetch("/api/custom-agents/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const data = await res.json();
-      setConfig(data);
-      setStep("review");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Generation failed");
-    } finally {
-      setGenerating(false);
-    }
+    // Simulate AI generation with mock config
+    await new Promise((r) => setTimeout(r, 1500));
+    setConfig({
+      name: "PR Staleness Monitor",
+      description: description.trim(),
+      tags: ["code-health", "notifications"],
+      triggerType: "scheduled",
+      schedule: "0 9 * * 1-5",
+      dataSources: ["ado-prs"],
+      systemPrompt:
+        "You are a PR health monitor. Check all open PRs and flag any that have been open more than 5 days without a review. Group by repo and sort by age.",
+      maxTokens: 4096,
+      outputFormat: "markdown",
+      recordType: "custom-agent-output",
+    });
+    setStep("review");
+    setGenerating(false);
   };
 
   const handleSave = async () => {
     if (!config) return;
     setSaving(true);
     setError(null);
-    try {
-      const url = isEdit ? `/api/custom-agents/${editAgentId!}` : "/api/custom-agents";
-      const method = isEdit ? "PUT" : "POST";
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(config),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      setOpen(false);
-      reset();
-      onCreated();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save");
-    } finally {
-      setSaving(false);
-    }
+    // Simulate save
+    await new Promise((r) => setTimeout(r, 800));
+    setOpen(false);
+    reset();
+    onCreated();
+    setSaving(false);
   };
 
   const handleDelete = async () => {
     if (!editAgentId) return;
     if (!confirm("Delete this agent? This cannot be undone.")) return;
     try {
-      await fetch(`/api/custom-agents/${editAgentId}`, { method: "DELETE" });
+      // Simulate delete
+      await new Promise((r) => setTimeout(r, 500));
       setOpen(false);
       reset();
       onCreated();
